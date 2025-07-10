@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity } from 'react-native';
 import FeatureCard from '../components/FeatureCard';
+import { Ionicons } from '@expo/vector-icons';
 
 const HomeScreen = ({ navigation }) => {
   const features = [
@@ -15,9 +16,14 @@ const HomeScreen = ({ navigation }) => {
     { title: 'Reports', screen: 'Reports', iconName: 'document-text-outline' },
   ];
 
+  const handleLogout = () => {
+    navigation.replace('Login');
+  };
+
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.header}>Dashboard</Text>
+
       <View style={styles.grid}>
         {features.map((f, i) => (
           <FeatureCard
@@ -28,6 +34,11 @@ const HomeScreen = ({ navigation }) => {
           />
         ))}
       </View>
+
+      <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+        <Ionicons name="log-out-outline" size={20} color="#fff" />
+        <Text style={styles.logoutText}>Logout</Text>
+      </TouchableOpacity>
     </ScrollView>
   );
 };
@@ -35,16 +46,35 @@ const HomeScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     padding: 16,
+    backgroundColor: '#F9FAFB',
+    flexGrow: 1,
   },
   header: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 16,
+    textAlign: 'center',
+    color: '#333',
   },
   grid: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
+    marginBottom: 24,
+  },
+  logoutButton: {
+    backgroundColor: 'red',
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderRadius: 10,
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });
 

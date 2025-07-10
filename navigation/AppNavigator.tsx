@@ -23,15 +23,15 @@ const AppNavigator = () => (
     />
     <Stack.Screen name="Home" component={HomeScreen} 
      options={{ headerShown: false }}/>
-    <Stack.Screen name="Call Logs" component={CallLogsScreen} />
-    <Stack.Screen name="SMS Logs" component={SMSLogsScreen} />
-    <Stack.Screen name="Social Media" component={SocialMediaScreen} />
+    <Stack.Screen name="Call Logs" component={CallLogsScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="SMS Logs" component={SMSLogsScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Social Media" component={SocialMediaScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Location" component={LocationScreen} options={{ headerShown: false }} />
-    <Stack.Screen name="App Usage" component={AppUsageScreen} />
-    <Stack.Screen name="Web Filtering" component={WebFilterScreen} />
+    <Stack.Screen name="App Usage" component={AppUsageScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Web Filtering" component={WebFilterScreen} options={{ headerShown: false }} />
     <Stack.Screen name="Screen Time" component={ScreenTimeScreen} />
-    <Stack.Screen name="Alerts" component={AlertsScreen} />
-    <Stack.Screen name="Reports" component={ReportsScreen} />
+    <Stack.Screen name="Alerts" component={AlertsScreen} options={{ headerShown: false }} />
+    <Stack.Screen name="Reports" component={ReportsScreen} options={{ headerShown: false }}/>
   </Stack.Navigator>
 );
 

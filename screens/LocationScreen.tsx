@@ -2,23 +2,33 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator, Alert, Dimensions, Platform } from 'react-native';
 import * as Location from 'expo-location';
 
-let MapView, Marker;
-if (Platform.OS !== 'web') {
-  // Lazy import only on native platforms
-  const Maps = require('react-native-maps');
-  MapView = Maps.default;
-  Marker = Maps.Marker;
-}
+type LocationType = {
+  coords: {
+    latitude: number;
+    longitude: number;
+    [key: string]: any;
+  };
+  [key: string]: any;
+};
+
+type MapViewType = React.ComponentType<any>;
+type MarkerType = React.ComponentType<any>;
 
 const LocationScreen = () => {
-  const [location, setLocation] = useState<Location.LocationObject | null>(null);
-  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [location, setLocation] = useState<LocationType | null>(null);
+  const [MapView, setMapView] = useState<MapViewType | null>(null);
+  const [Marker, setMarker] = useState<MarkerType | null>(null);
 
   useEffect(() => {
-    (async () => {
+    const init = async () => {
+      if (Platform.OS === 'web') return;
+
+      const { default: MV, Marker: MK } = await import('react-native-maps');
+      setMapView(() => MV);
+      setMarker(() => MK);
+
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== 'granted') {
-        setErrorMsg('Permission to access location was denied');
         Alert.alert('Permission Denied', 'Please enable location permissions.');
         return;
       }
@@ -35,23 +45,25 @@ const LocationScreen = () => {
         (newLoc) => setLocation(newLoc)
       );
 
-      return () => subscription.remove(); // Cleanup on unmount
-    })();
+      return () => subscription.remove();
+    };
+
+    init();
   }, []);
 
   if (Platform.OS === 'web') {
     return (
       <View style={styles.centered}>
-        <Text style={styles.warning}>Map view is not supported on web. Please use a mobile device.</Text>
+        <Text style={styles.warning}>🌐 Map is not supported on web. Use a mobile device or emulator.</Text>
       </View>
     );
   }
 
-  if (!location) {
+  if (!location || !MapView || !Marker) {
     return (
       <View style={styles.centered}>
         <ActivityIndicator size="large" color="#4B7BEC" />
-        <Text>Fetching location...</Text>
+        <Text>Loading map...</Text>
       </View>
     );
   }
@@ -70,6 +82,7 @@ const LocationScreen = () => {
           longitudeDelta: 0.005,
         }}
         showsUserLocation={true}
+        showsMyLocationButton={true}
       >
         <Marker coordinate={{ latitude, longitude }} title="Child's Location" />
       </MapView>
@@ -78,10 +91,7 @@ const LocationScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: '#fff',
-  },
+  container: { flex: 1, backgroundColor: '#fff' },
   header: {
     fontSize: 18,
     fontWeight: 'bold',
@@ -107,3 +117,17 @@ const styles = StyleSheet.create({
 });
 
 export default LocationScreen;
+// import { StyleSheet, Text, View } from 'react-native'
+// import React from 'react'
+
+// const LocationScreen = () => {
+//   return (
+//     <View>
+//       <Text>LocationScreen</Text>
+//     </View>
+//   )
+// }
+
+// export default LocationScreen
+
+// const styles = StyleSheet.create({})
